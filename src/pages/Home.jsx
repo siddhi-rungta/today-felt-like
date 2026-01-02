@@ -74,8 +74,8 @@ export default function Home() {
               transform: selectedMood === m.id ? "scale(1.08)" : "scale(1)",
               boxShadow:
                 selectedMood === m.id
-                  ? "0 8px 20px rgba(0,0,0,0.12)"
-                  : "none"
+                  ? "0 8px 20px rgba(0,0,0,0.15)"
+                  : "0 6px 14px rgba(0,0,0,0.08)"
             }}
           >
             <div style={styles.emoji}>{m.emoji}</div>
@@ -120,6 +120,19 @@ const styles = {
     gap: "14px",
     flexWrap: "wrap"
   },
+  moodButton: {
+    border: "none",
+    borderRadius: "22px",
+    padding: "16px",
+    cursor: "pointer",
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    width: "88px",
+    transition: "all 0.25s ease",
+    boxShadow: "0 6px 14px rgba(0,0,0,0.08)",
+  },
+
   moodCard: {
     width: "78px",
     height: "78px",
