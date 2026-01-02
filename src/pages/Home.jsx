@@ -64,10 +64,13 @@ export default function Home() {
 
   return (
     <div style={styles.container}>
-      <h1 style={styles.title}>
-        {name ? `Hey ${firstName}  ✨, how did today feel?` : "How did today feel?"}
-      </h1>
+        <p style={{ fontSize: 14, opacity: 0.6, marginBottom: 6 }}>
+          Hey {firstName || "there"}✨
+        </p>
 
+        <h1 style={styles.title}>
+            How did today feel?
+        </h1>
       <div style={styles.moodRow}>
         {moods.map((m) => (
           <button
@@ -76,7 +79,11 @@ export default function Home() {
             style={{
               ...styles.moodButton,
               background: selectedMood === m.id ? m.color : "#FFFFFF",
-              transform: selectedMood === m.id ? "scale(1.1)" : "scale(1)"
+              transform: selectedMood === m.id ? "scale(1.08)" : "scale(1)",
+              boxShadow:
+              selectedMood === m.id
+                ? "0 14px 30px rgba(0,0,0,0.14)"
+                : "0 10px 24px rgba(0,0,0,0.08)"
             }}
           >
             <span style={styles.emoji}>{m.emoji}</span>
@@ -86,29 +93,29 @@ export default function Home() {
       </div>
 
       <textarea
-        placeholder="Add a small note for today (optional)…"
+        placeholder="Write a little memory for today…"
         value={note}
         onChange={(e) => setNote(e.target.value)}
         onBlur={() => selectedMood && saveMood(selectedMood)}
         style={styles.textarea}
       />
 
-      {selectedMood && <p style={styles.saved}>Saved for today ✨</p>}
+      {selectedMood && <p style={styles.saved}>Saved for today 🌱</p>}
     </div>
   );
 }
 
 const styles = {
-  container: {
-    minHeight: "100vh",
-    background: "linear-gradient(180deg, #FAF7F5 0%, #F3EFEA 100%)",
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-    justifyContent: "center",
-    padding: "32px 20px",
-    fontFamily: "Inter, system-ui, -apple-system"
-  },
+    container: {
+        minHeight: "100vh",
+        background: "linear-gradient(180deg, #FFF7F3 0%, #F6EFEA 100%)",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        padding: "32px 20px",
+        fontFamily: "Inter, system-ui"
+    },
   title: {
     fontSize: "34px",
     fontWeight: 700,
@@ -126,7 +133,7 @@ const styles = {
   },
   moodButton: {
     border: "none",
-    borderRadius: "24px",
+    borderRadius: "26px",
     padding: "16px 14px",
     cursor: "pointer",
     display: "flex",
@@ -134,33 +141,35 @@ const styles = {
     alignItems: "center",
     width: "82px",
     background: "#FFFFFF",
-    boxShadow: "0 8px 20px rgba(0,0,0,0.08)",
+    boxShadow: "0 10px 24px rgba(0,0,0,0.08)",
     transition: "all 0.25s ease"
   },
   emoji: {
-    fontSize: "30px"
+    fontSize: "34px",
+    marginBottom: "6px"
   },
   label: {
-    fontSize: "13px",
-    marginTop: "4px"
+    fontSize: "12px",
+    opacity: 0.65
   },
-  textarea: {
+   textarea: {
     width: "100%",
     maxWidth: "360px",
     minHeight: "90px",
-    borderRadius: "20px",
+    borderRadius: "22px",
     padding: "14px 16px",
     border: "none",
     resize: "none",
     fontSize: "14px",
     background: "#FFFFFF",
-    boxShadow: "0 6px 18px rgba(0,0,0,0.08)",
+    boxShadow: "0 8px 20px rgba(0,0,0,0.08)",
     outline: "none",
-    marginTop: "10px"
+    marginTop: "12px"
   },
   saved: {
     marginTop: "10px",
     fontSize: "14px",
-    color: "#777"
+    color: "#777",
+    opacity: 0.8
   }
 };

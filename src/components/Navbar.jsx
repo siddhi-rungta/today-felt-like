@@ -38,6 +38,7 @@ const styles = {
     background: "rgba(255,255,255,0.9)",
     backdropFilter: "blur(12px)",
     borderTop: "1px solid rgba(0,0,0,0.06)",
+    borderRadius: "18px 18px 0 0",
     display: "flex",
     justifyContent: "space-around",
     alignItems: "center",
