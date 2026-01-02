@@ -162,17 +162,17 @@ const styles = {
     display: "grid",
     gridTemplateColumns: "repeat(7, 1fr)",
     gap: "12px",
-    maxWidth: "420px",
+    maxWidth: "500px",
     margin: "0 auto"
   },
     cell: {
-        width: "48px",
-        height: "48px",
-        borderRadius: "50%",
+        width: "60px",
+        height: "60px",
+        borderRadius: "20%",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        fontSize: "20px",
+        fontSize: "40px",
         transition: "transform 0.15s"
   },
   overlay: {

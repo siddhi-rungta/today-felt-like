@@ -24,18 +24,18 @@ function App() {
 
   return (
     <BrowserRouter>
-      <div style={{ paddingBottom: "70px" }}>
-        <Routes>
-          <Route path="/login" element={user ? <Navigate to="/" /> : <Login />} />
-          <Route path="/" element={user ? <Home /> : <Navigate to="/login" />} />
-          <Route path="/timeline" element={user ? <Timeline /> : <Navigate to="/login" />} />
-        </Routes>
-      </div>
+      <Routes>
+        <Route path="/login" element={user ? <Navigate to="/" /> : <Login />} />
+        <Route path="/" element={user ? <Home /> : <Navigate to="/login" />} />
+        <Route
+          path="/timeline"
+          element={user ? <Timeline /> : <Navigate to="/login" />}
+        />
+      </Routes>
 
       {user && <Navbar />}
     </BrowserRouter>
   );
-
 }
 
 export default App;
