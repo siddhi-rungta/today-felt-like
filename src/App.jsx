@@ -6,6 +6,7 @@ import { auth } from "./firebase";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Timeline from "./pages/Timeline";
+import Navbar from "./components/Navbar";
 
 function App() {
   const [user, setUser] = useState(null);
@@ -23,22 +24,18 @@ function App() {
 
   return (
     <BrowserRouter>
-      <Routes>
-        <Route
-          path="/login"
-          element={user ? <Navigate to="/" /> : <Login />}
-        />
-        <Route
-          path="/"
-          element={user ? <Home /> : <Navigate to="/login" />}
-        />
-        <Route
-          path="/timeline"
-          element={user ? <Timeline /> : <Navigate to="/login" />}
-        />
-      </Routes>
+      <div style={{ paddingBottom: "70px" }}>
+        <Routes>
+          <Route path="/login" element={user ? <Navigate to="/" /> : <Login />} />
+          <Route path="/" element={user ? <Home /> : <Navigate to="/login" />} />
+          <Route path="/timeline" element={user ? <Timeline /> : <Navigate to="/login" />} />
+        </Routes>
+      </div>
+
+      {user && <Navbar />}
     </BrowserRouter>
   );
+
 }
 
 export default App;
