@@ -15,7 +15,7 @@ function Home() {
   const [loading, setLoading] = useState(true);
 
   const user = auth.currentUser;
-  const todayKey = new Date().toISOString().split("T")[0];
+  const todayKey = new Date().toLocaleDateString("en-CA");
 
   useEffect(() => {
     if (!user) return;
