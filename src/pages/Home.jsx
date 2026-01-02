@@ -73,19 +73,15 @@ export default function Home() {
         </h1>
       <div style={styles.moodRow}>
         {moods.map((m) => (
-          <button
-            key={m.id}
-            onClick={() => saveMood(m.id)}
-            style={{
-              ...styles.moodButton,
-              background: selectedMood === m.id ? m.color : "#FFFFFF",
-              transform: selectedMood === m.id ? "scale(1.08)" : "scale(1)",
-              boxShadow:
-              selectedMood === m.id
-                ? "0 14px 30px rgba(0,0,0,0.14)"
-                : "0 10px 24px rgba(0,0,0,0.08)"
+            <button
+                key={m.id}
+                onClick={() => saveMood(m.id)}
+                style={{
+                    ...styles.moodButton,
+                    ...(selectedMood === m.id && styles.moodButtonActive),
+                    background: selectedMood === m.id ? m.color : "#FFFFFF"
             }}
-          >
+            >
             <span style={styles.emoji}>{m.emoji}</span>
             <span style={styles.label}>{m.label}</span>
           </button>
@@ -171,5 +167,14 @@ const styles = {
     fontSize: "14px",
     color: "#777",
     opacity: 0.8
+  },
+  moodButtonActive: {
+    animation: "pop 0.3s ease-out"
+  },
+  "@keyframes pop": {
+    "0%": { transform: "scale(1)" },
+    "50%": { transform: "scale(1.15)" },
+    "100%": { transform: "scale(1.08)" }
+
   }
 };

@@ -11,16 +11,18 @@ const moodsMap = {
 };
 
 function Timeline() {
+  const user = auth.currentUser;
+
   const [entries, setEntries] = useState({});
   const [selectedDay, setSelectedDay] = useState(null);
 
-  const user = auth.currentUser;
+  // 📅 month navigation
+  const [currentDate, setCurrentDate] = useState(new Date());
 
-  const today = new Date();
-  const year = today.getFullYear();
-  const month = today.getMonth();
+  const year = currentDate.getFullYear();
+  const month = currentDate.getMonth();
 
-  // ✅ LOCAL date (no timezone bug)
+  // ✅ local-safe today key
   const todayKey = new Date().toLocaleDateString("en-CA");
 
   useEffect(() => {
@@ -43,12 +45,31 @@ function Timeline() {
 
   const daysInMonth = new Date(year, month + 1, 0).getDate();
 
+  const goPrevMonth = () => {
+    setCurrentDate(new Date(year, month - 1, 1));
+  };
+
+  const goNextMonth = () => {
+    setCurrentDate(new Date(year, month + 1, 1));
+  };
+
   return (
     <div style={styles.container}>
-      <h1 style={styles.title}>
-        {today.toLocaleString("default", { month: "long" })} {year}
-      </h1>
+      {/* 🌸 Header */}
+      <div style={styles.header}>
+        <button onClick={goPrevMonth} style={styles.navBtn}>‹</button>
 
+        <div>
+          <p style={styles.subTitle}>Your little moments ✨</p>
+          <h1 style={styles.title}>
+            {currentDate.toLocaleString("default", { month: "long" })} {year}
+          </h1>
+        </div>
+
+        <button onClick={goNextMonth} style={styles.navBtn}>›</button>
+      </div>
+
+      {/* 🟢 Grid */}
       <div style={styles.grid}>
         {[...Array(daysInMonth)].map((_, i) => {
           const day = i + 1;
@@ -66,7 +87,10 @@ function Timeline() {
               style={{
                 ...styles.cell,
                 background: mood ? moodsMap[mood].color : "#EEE",
-                border: isToday ? "2px solid #333" : "none",
+                border: isToday ? "3px solid rgba(0,0,0,0.15)" : "none",
+                boxShadow: isToday
+                  ? "0 0 0 6px rgba(0,0,0,0.05)"
+                  : "none",
                 cursor: mood ? "pointer" : "default"
               }}
             >
@@ -76,20 +100,17 @@ function Timeline() {
         })}
       </div>
 
-      {/* ✅ VIEW-ONLY MODAL */}
+      {/* 💬 View-only modal */}
       {selectedDay && (
         <div style={styles.overlay}>
           <div style={styles.modal}>
-            <h3 style={{ marginBottom: "10px" }}>{selectedDay}</h3>
+            <h3>{selectedDay}</h3>
 
             <div style={styles.noteBox}>
               {entries[selectedDay]?.note || "No note added for this day."}
             </div>
 
-            <button
-              style={styles.closeBtn}
-              onClick={() => setSelectedDay(null)}
-            >
+            <button style={styles.closeBtn} onClick={() => setSelectedDay(null)}>
               Close
             </button>
           </div>
@@ -102,14 +123,41 @@ function Timeline() {
 const styles = {
   container: {
     minHeight: "100vh",
-    background: "#FAF7F5",
-    padding: "24px",
-    fontFamily: "Inter, sans-serif"
+    background: "linear-gradient(180deg, #FFF7F3 0%, #EFE6DF 100%)",
+    padding: "28px 20px",
+    fontFamily: "Inter, system-ui"
   },
+
+  header: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "space-between",
+    maxWidth: "420px",
+    margin: "0 auto 24px",
+    textAlign: "center"
+  },
+
   title: {
-    textAlign: "center",
-    marginBottom: "20px"
+    margin: 0
   },
+
+  subTitle: {
+    fontSize: "13px",
+    opacity: 0.6,
+    marginBottom: "4px"
+  },
+
+  navBtn: {
+    border: "none",
+    background: "#FFF",
+    width: "36px",
+    height: "36px",
+    borderRadius: "50%",
+    fontSize: "22px",
+    cursor: "pointer",
+    boxShadow: "0 4px 10px rgba(0,0,0,0.1)"
+  },
+
   grid: {
     display: "grid",
     gridTemplateColumns: "repeat(7, 1fr)",
@@ -117,6 +165,7 @@ const styles = {
     maxWidth: "420px",
     margin: "0 auto"
   },
+
   cell: {
     width: "48px",
     height: "48px",
@@ -126,6 +175,7 @@ const styles = {
     justifyContent: "center",
     fontSize: "20px"
   },
+
   overlay: {
     position: "fixed",
     inset: 0,
@@ -134,6 +184,7 @@ const styles = {
     alignItems: "center",
     justifyContent: "center"
   },
+
   modal: {
     background: "#FFF",
     borderRadius: "18px",
@@ -144,6 +195,7 @@ const styles = {
     flexDirection: "column",
     gap: "14px"
   },
+
   noteBox: {
     background: "#F6F6F6",
     borderRadius: "12px",
@@ -151,6 +203,7 @@ const styles = {
     fontSize: "14px",
     whiteSpace: "pre-wrap"
   },
+
   closeBtn: {
     border: "none",
     background: "#333",
