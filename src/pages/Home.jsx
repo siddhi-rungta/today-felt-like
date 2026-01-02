@@ -101,18 +101,21 @@ export default function Home() {
 const styles = {
   container: {
     minHeight: "100vh",
-    background: "#FAF7F5",
+    background: "linear-gradient(180deg, #FAF7F5 0%, #F3EFEA 100%)",
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
     justifyContent: "center",
-    padding: "24px",
-    fontFamily: "Inter, sans-serif"
+    padding: "32px 20px",
+    fontFamily: "Inter, system-ui, -apple-system"
   },
   title: {
-    fontSize: "32px",
-    marginBottom: "28px",
-    textAlign: "center"
+    fontSize: "34px",
+    fontWeight: 700,
+    textAlign: "center",
+    lineHeight: 1.2,
+    marginBottom: "36px",
+    color: "#1F1F1F"
   },
   moodRow: {
     display: "flex",
@@ -123,14 +126,16 @@ const styles = {
   },
   moodButton: {
     border: "none",
-    borderRadius: "20px",
-    padding: "14px",
+    borderRadius: "24px",
+    padding: "16px 14px",
     cursor: "pointer",
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
-    width: "80px",
-    transition: "all 0.2s ease"
+    width: "82px",
+    background: "#FFFFFF",
+    boxShadow: "0 8px 20px rgba(0,0,0,0.08)",
+    transition: "all 0.25s ease"
   },
   emoji: {
     fontSize: "30px"
@@ -142,12 +147,16 @@ const styles = {
   textarea: {
     width: "100%",
     maxWidth: "360px",
-    minHeight: "70px",
-    borderRadius: "14px",
-    padding: "10px",
-    border: "1px solid #DDD",
+    minHeight: "90px",
+    borderRadius: "20px",
+    padding: "14px 16px",
+    border: "none",
     resize: "none",
-    fontSize: "14px"
+    fontSize: "14px",
+    background: "#FFFFFF",
+    boxShadow: "0 6px 18px rgba(0,0,0,0.08)",
+    outline: "none",
+    marginTop: "10px"
   },
   saved: {
     marginTop: "10px",

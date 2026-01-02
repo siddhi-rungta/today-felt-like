@@ -35,11 +35,12 @@ const styles = {
     left: 0,
     right: 0,
     height: "64px",
-    background: "#FFFFFF",
+    background: "rgba(255,255,255,0.9)",
+    backdropFilter: "blur(12px)",
+    borderTop: "1px solid rgba(0,0,0,0.06)",
     display: "flex",
     justifyContent: "space-around",
     alignItems: "center",
-    borderTop: "1px solid #EEE",
     fontFamily: "Inter, sans-serif"
   },
   link: {
