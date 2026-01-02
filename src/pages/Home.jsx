@@ -12,9 +12,12 @@ const moods = [
 
 function Home() {
   const [selectedMood, setSelectedMood] = useState(null);
+  const [note, setNote] = useState("");
   const [loading, setLoading] = useState(true);
 
   const user = auth.currentUser;
+
+  // ✅ LOCAL date (fixes Jan 2 / Jan 3 bug)
   const todayKey = new Date().toLocaleDateString("en-CA");
 
   useEffect(() => {
@@ -25,7 +28,8 @@ function Home() {
       const snap = await getDoc(ref);
 
       if (snap.exists()) {
-        setSelectedMood(snap.data().mood);
+        setSelectedMood(snap.data().mood || null);
+        setNote(snap.data().note || "");
       }
       setLoading(false);
     };
@@ -37,10 +41,15 @@ function Home() {
     setSelectedMood(moodId);
 
     const ref = doc(db, "users", user.uid, "entries", todayKey);
-    await setDoc(ref, {
-      mood: moodId,
-      createdAt: serverTimestamp()
-    });
+    await setDoc(
+      ref,
+      {
+        mood: moodId,
+        note,
+        createdAt: serverTimestamp()
+      },
+      { merge: true }
+    );
   };
 
   if (loading) return null;
@@ -57,7 +66,7 @@ function Home() {
             style={{
               ...styles.moodButton,
               background: selectedMood === m.id ? m.color : "#FFFFFF",
-              transform: selectedMood === m.id ? "scale(1.15)" : "scale(1)"
+              transform: selectedMood === m.id ? "scale(1.1)" : "scale(1)"
             }}
           >
             <span style={styles.emoji}>{m.emoji}</span>
@@ -66,9 +75,15 @@ function Home() {
         ))}
       </div>
 
-      {selectedMood && (
-        <p style={styles.saved}>Saved for today ✨</p>
-      )}
+      <textarea
+        placeholder="Add a small note for today (optional)…"
+        value={note}
+        onChange={(e) => setNote(e.target.value)}
+        onBlur={() => saveMood(selectedMood)}
+        style={styles.textarea}
+      />
+
+      {selectedMood && <p style={styles.saved}>Saved for today ✨</p>}
     </div>
   );
 }
@@ -79,40 +94,52 @@ const styles = {
     background: "#FAF7F5",
     display: "flex",
     flexDirection: "column",
-    justifyContent: "center",
     alignItems: "center",
+    justifyContent: "center",
+    padding: "24px",
     fontFamily: "Inter, sans-serif"
   },
   title: {
     fontSize: "36px",
-    marginBottom: "32px"
+    marginBottom: "28px"
   },
   moodRow: {
     display: "flex",
-    gap: "18px"
+    gap: "16px",
+    marginBottom: "20px"
   },
   moodButton: {
     border: "none",
     borderRadius: "20px",
-    padding: "16px 14px",
+    padding: "14px",
     cursor: "pointer",
-    transition: "all 0.2s ease",
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
-    width: "90px"
+    width: "80px",
+    transition: "all 0.2s ease"
   },
   emoji: {
-    fontSize: "32px",
-    marginBottom: "6px"
+    fontSize: "30px"
   },
   label: {
+    fontSize: "13px",
+    marginTop: "4px"
+  },
+  textarea: {
+    width: "100%",
+    maxWidth: "360px",
+    minHeight: "70px",
+    borderRadius: "14px",
+    padding: "10px",
+    border: "1px solid #DDD",
+    resize: "none",
     fontSize: "14px"
   },
   saved: {
-    marginTop: "24px",
+    marginTop: "10px",
     fontSize: "14px",
-    color: "#888"
+    color: "#777"
   }
 };
 
