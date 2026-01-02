@@ -13,6 +13,7 @@ export default function Navbar() {
     <div style={styles.nav}>
       <Link to="/" style={link("/")}>Today</Link>
       <Link to="/timeline" style={link("/timeline")}>Timeline</Link>
+      <Link to="/charts" style={link("/charts")}>Charts</Link>
     </div>
   );
 }

@@ -7,6 +7,7 @@ import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Timeline from "./pages/Timeline";
 import Navbar from "./components/Navbar";
+import Charts from "./pages/Charts";
 
 function App() {
   const [user, setUser] = useState(null);
@@ -30,6 +31,10 @@ function App() {
         <Route
           path="/timeline"
           element={user ? <Timeline /> : <Navigate to="/login" />}
+        />
+        <Route
+          path="/charts"
+          element={user ? <Charts /> : <Navigate to="/login" />}
         />
       </Routes>
 

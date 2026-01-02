@@ -3,11 +3,20 @@ import { auth, db } from "../firebase";
 import { collection, getDocs } from "firebase/firestore";
 
 const moodsMap = {
-  sad: { emoji: "😿", color: "#F4A261" },
-  low: { emoji: "😕", color: "#E9C46A" },
-  neutral: { emoji: "😐", color: "#D3D3D3" },
-  good: { emoji: "🙂", color: "#A8DADC" },
-  happy: { emoji: "😸", color: "#90DB8A" }
+  sad: { emoji: "😿", color: "#FADADD" },
+  low: { emoji: "😕", color: "#FBE7C6" },
+  okay: { emoji: "😐", color: "#E5E7EB" },
+  good: { emoji: "🙂", color: "#D1FAE5" },
+  happy: { emoji: "😊", color: "#BBF7D0" },
+
+  tired: { emoji: "😴", color: "#E0E7FF" },
+  sick: { emoji: "🤒", color: "#FEE2E2" },
+
+  anxious: { emoji: "😰", color: "#FFE4E6" },
+  calm: { emoji: "🌿", color: "#ECFDF5" },
+
+  crampy: { emoji: "🌸", color: "#FCE7F3" },
+  low_energy: { emoji: "🌙", color: "#EDE9FE" }
 };
 
 function Timeline() {

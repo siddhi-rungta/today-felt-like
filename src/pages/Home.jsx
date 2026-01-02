@@ -3,11 +3,23 @@ import { auth, db } from "../firebase";
 import { doc, getDoc, setDoc, serverTimestamp } from "firebase/firestore";
 
 const moods = [
-  { id: "sad", emoji: "😿", label: "Sad", color: "#F7C6C7" },
+  { id: "sad", emoji: "😿", label: "Sad", color: "#FADADD" },
   { id: "low", emoji: "😕", label: "Low", color: "#FBE7C6" },
-  { id: "neutral", emoji: "😐", label: "Okay", color: "#E2E2E2" },
-  { id: "good", emoji: "😊", label: "Good", color: "#CDEAC0" },
-  { id: "happy", emoji: "😸", label: "Happy", color: "#B5EAD7" }
+  { id: "okay", emoji: "😐", label: "Okay", color: "#E5E7EB" },
+  { id: "good", emoji: "🙂", label: "Good", color: "#D1FAE5" },
+  { id: "happy", emoji: "😊", label: "Happy", color: "#BBF7D0" },
+
+  // physical
+  { id: "tired", emoji: "😴", label: "Tired", color: "#E0E7FF" },
+  { id: "sick", emoji: "🤒", label: "Sick", color: "#FEE2E2" },
+
+  // emotional
+  { id: "anxious", emoji: "😰", label: "Anxious", color: "#FFE4E6" },
+  { id: "calm", emoji: "🌿", label: "Calm", color: "#ECFDF5" },
+
+  // period-friendly (soft wording)
+  { id: "crampy", emoji: "🌸", label: "Crampy", color: "#FCE7F3" },
+  { id: "low_energy", emoji: "🌙", label: "Low energy", color: "#EDE9FE" }
 ];
 
 export default function Home() {
