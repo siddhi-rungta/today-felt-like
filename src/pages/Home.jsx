@@ -10,18 +10,22 @@ const moods = [
   { id: "happy", emoji: "😊", label: "Happy", color: "#90DB8A" }
 ];
 
-function Home() {
+export default function Home() {
   const [selectedMood, setSelectedMood] = useState(null);
   const [note, setNote] = useState("");
   const [loading, setLoading] = useState(true);
+  const [name, setName] = useState("");
 
   const user = auth.currentUser;
 
-  // ✅ LOCAL date (fixes Jan 2 / Jan 3 bug)
+  // ✅ LOCAL date (fixes date mismatch bug)
   const todayKey = new Date().toLocaleDateString("en-CA");
 
   useEffect(() => {
     if (!user) return;
+
+    // ✅ set name safely
+    setName(user.displayName || "");
 
     const loadToday = async () => {
       const ref = doc(db, "users", user.uid, "entries", todayKey);
@@ -31,6 +35,7 @@ function Home() {
         setSelectedMood(snap.data().mood || null);
         setNote(snap.data().note || "");
       }
+
       setLoading(false);
     };
 
@@ -38,6 +43,8 @@ function Home() {
   }, [user, todayKey]);
 
   const saveMood = async (moodId) => {
+    if (!user) return;
+
     setSelectedMood(moodId);
 
     const ref = doc(db, "users", user.uid, "entries", todayKey);
@@ -53,10 +60,13 @@ function Home() {
   };
 
   if (loading) return null;
+  const firstName = name ? name.split(" ")[0] : "";
 
   return (
     <div style={styles.container}>
-      <h1 style={styles.title}>How did today feel?</h1>
+      <h1 style={styles.title}>
+        {name ? `Hey ${firstName}  ✨, how did today feel?` : "How did today feel?"}
+      </h1>
 
       <div style={styles.moodRow}>
         {moods.map((m) => (
@@ -79,7 +89,7 @@ function Home() {
         placeholder="Add a small note for today (optional)…"
         value={note}
         onChange={(e) => setNote(e.target.value)}
-        onBlur={() => saveMood(selectedMood)}
+        onBlur={() => selectedMood && saveMood(selectedMood)}
         style={styles.textarea}
       />
 
@@ -100,13 +110,16 @@ const styles = {
     fontFamily: "Inter, sans-serif"
   },
   title: {
-    fontSize: "36px",
-    marginBottom: "28px"
+    fontSize: "32px",
+    marginBottom: "28px",
+    textAlign: "center"
   },
   moodRow: {
     display: "flex",
     gap: "16px",
-    marginBottom: "20px"
+    marginBottom: "20px",
+    flexWrap: "wrap",
+    justifyContent: "center"
   },
   moodButton: {
     border: "none",
@@ -142,5 +155,3 @@ const styles = {
     color: "#777"
   }
 };
-
-export default Home;
