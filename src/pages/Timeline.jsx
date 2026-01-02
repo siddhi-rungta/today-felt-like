@@ -53,6 +53,7 @@ function Timeline() {
   }, [user]);
 
   const daysInMonth = new Date(year, month + 1, 0).getDate();
+  const firstDayOfWeek = new Date(year, month, 1).getDay(); // 0 = Sunday
 
   const goPrevMonth = () => {
     setCurrentDate(new Date(year, month - 1, 1));
@@ -63,7 +64,7 @@ function Timeline() {
   };
 
   return (
-    <div style={styles.container}>
+    <div className="app-container" style={styles.container}>
       {/* 🌸 Header */}
       <div style={styles.header}>
         <button onClick={goPrevMonth} style={styles.navBtn}>‹</button>
@@ -78,8 +79,20 @@ function Timeline() {
         <button onClick={goNextMonth} style={styles.navBtn}>›</button>
       </div>
 
+      {/* 🟢 Calendar headers (weekday names) */}
+      <div className="calendar-headers">
+        {['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].map((d) => (
+          <div key={d} className="day-name">{d}</div>
+        ))}
+      </div>
+
       {/* 🟢 Grid */}
-      <div style={styles.grid}>
+      <div className="timeline-grid" style={styles.grid}>
+        {/* leading empty slots to align first day */}
+        {[...Array(firstDayOfWeek)].map((_, idx) => (
+          <div key={`empty-${idx}`} className="timeline-cell" style={{...styles.cell, background: 'transparent'}} />
+        ))}
+
         {[...Array(daysInMonth)].map((_, i) => {
           const day = i + 1;
           const key = `${year}-${String(month + 1).padStart(2, "0")}-${String(
@@ -92,6 +105,7 @@ function Timeline() {
           return (
             <div
               key={day}
+              className="timeline-cell"
               onClick={() => mood && setSelectedDay(key)}
               style={{
                 ...styles.cell,
@@ -100,10 +114,12 @@ function Timeline() {
                 boxShadow: isToday
                   ? "0 0 0 6px rgba(0,0,0,0.05)"
                   : "none",
-                cursor: mood ? "pointer" : "default"
+                cursor: mood ? "pointer" : "default",
+                position: 'relative'
               }}
             >
-              {mood ? moodsMap[mood].emoji : ""}
+              <div style={{position: 'absolute', top: 6, left: 8, fontSize: 12, color: '#333'}}>{day}</div>
+              <div style={{fontSize: 26}}>{mood ? moodsMap[mood].emoji : ''}</div>
             </div>
           );
         })}
@@ -169,19 +185,15 @@ const styles = {
 
   grid: {
     display: "grid",
-    gridTemplateColumns: "repeat(7, 1fr)",
     gap: "12px",
-    maxWidth: "500px",
+    maxWidth: "100%",
     margin: "0 auto"
   },
     cell: {
-        width: "60px",
-        height: "60px",
         borderRadius: "20%",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        fontSize: "40px",
         transition: "transform 0.15s"
   },
   overlay: {

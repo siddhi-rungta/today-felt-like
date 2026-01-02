@@ -72,7 +72,7 @@ export default function Home() {
   if (loading) return null;
 
   return (
-    <div style={styles.container}>
+    <div className="app-container" style={styles.container}>
       <p style={styles.hello}>✨ Hey {firstName}!</p>
       <h1 style={styles.title}>How are you feeling today?</h1>
 
@@ -81,6 +81,7 @@ export default function Home() {
           <div
             key={m.id}
             onClick={() => saveMood(m.id)}
+            className="mood-card"
             style={{
               ...styles.moodCard,
               background: m.color,
@@ -150,8 +151,6 @@ const styles = {
   },
 
   moodCard: {
-    width: "78px",
-    height: "78px",
     borderRadius: "22px",
     display: "flex",
     flexDirection: "column",

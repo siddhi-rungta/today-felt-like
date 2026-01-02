@@ -1,0 +1,131 @@
+/* Mobile-first global styles for responsiveness */
+/* Basic reset and typography */
+* { box-sizing: border-box; }
+html, body, #root { height: 100%; }
+body {
+  margin: 0;
+  font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background: transparent;
+  color: #111;
+}
+
+/* App container to keep content centered and padded */
+.app-container {
+  padding: 20px;
+  padding-bottom: 110px; /* leave space for bottom nav */
+  max-width: 900px;
+  width: 100%;
+  margin: 0 auto;
+  padding-inline: 16px; /* reduce horizontal padding to avoid overflow on narrow screens */
+}
+
+/* Cards: full width on small, constrained on larger screens */
+.cards-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  width: 100%;
+}
+.card {
+  width: 100%;
+  background: #fff;
+  border-radius: 18px;
+  padding: 18px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.06);
+}
+
+/* Timeline grid: responsive columns */
+.timeline-grid {
+  display: grid;
+  /* flexible 7-column calendar that can shrink on very narrow screens */
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 8px;
+  max-width: 100%; /* let the app-container control overall width */
+  margin: 0 auto;
+}
+.calendar-headers {
+  display: grid; /* show weekday labels on all sizes */
+  grid-template-columns: repeat(7, 1fr);
+  gap: 6px;
+  max-width: 100%;
+  margin: 0 auto 8px;
+  padding: 0 6px;
+}
+.calendar-headers .day-name {
+  text-align: center;
+  font-size: 12px;
+  color: #666;
+}
+.timeline-cell {
+  aspect-ratio: 1 / 1;
+  border-radius: 18%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem; /* slightly smaller on narrow screens */
+  transition: transform 0.15s;
+  min-height: 56px;
+  background: #EFEFEF;
+  min-width: 0; /* allow cells to shrink below their content width to avoid grid overflow */
+  padding: 6px;
+}
+
+/* Mood row and cards */
+.mood-row {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.mood-card {
+  width: 72px;
+  height: 72px;
+  border-radius: 18px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  transition: transform 0.18s ease;
+}
+.mood-card .emoji { font-size: 26px; }
+.mood-card .label { font-size: 12px; margin-top: 6px; }
+
+/* Bottom navigation spacing */
+.bottom-nav-space { height: 64px; }
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 56px;
+  background: #fff;
+  border-top: 1px solid #eee;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  font-family: Inter, system-ui;
+  z-index: 10;
+}
+
+/* Larger breakpoints */
+@media (min-width: 480px) {
+  .timeline-grid { grid-template-columns: repeat(7, 1fr); }
+  .timeline-cell { font-size: 1.25rem; min-height: 72px; }
+  .mood-card { width: 80px; height: 80px; }
+}
+
+/* tablet and up: show full 7-column calendar */
+@media (min-width: 768px) {
+  .timeline-grid { grid-template-columns: repeat(7, 1fr); }
+  .calendar-headers { display: grid; }
+  .mood-card { width: 88px; height: 88px; }
+  .card { max-width: 800px; }
+  .timeline-cell { font-size: 1.4rem; min-height: 92px; }
+}
+
+@media (min-width: 1200px) {
+  .card { max-width: 720px; }
+}

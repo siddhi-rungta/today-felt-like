@@ -158,31 +158,31 @@ export default function Charts() {
   ).length;
 
   return (
-    <div style={styles.container}>
+    <div className="app-container" style={styles.container}>
       <h1 style={styles.title}>📊 Your Mood Insights</h1>
       <p style={styles.subtitle}>Patterns, not pressure</p>
 
       {/* Doughnut */}
-      <div style={styles.card}>
+      <div className="card" style={styles.card}>
         <Doughnut data={doughnutData} />
       </div>
 
       {/* Line */}
-      <div style={styles.card}>
+      <div className="card" style={styles.card}>
         <h3>Mood over time</h3>
         <p> 1 being worst, 5 being best</p>
         <Line data={lineData} />
       </div>
 
       {/* Monthly */}
-      <div style={styles.card}>
+      <div className="card" style={styles.card}>
         <h3>Monthly comparison</h3>
         <p>This month: <b>{monthAverage(thisMonth)}</b></p>
         <p>Last month: <b>{monthAverage(lastMonth)}</b></p>
       </div>
 
       {/* Yearly */}
-      <div style={styles.card}>
+      <div className="card" style={styles.card}>
         <h3>{year} overview</h3>
         <p>Total entries: <b>{yearlyCount}</b></p>
       </div>
@@ -212,7 +212,6 @@ const styles = {
     color: "#666"
   },
   card: {
-    width: "320px",
     background: "#FFF",
     borderRadius: "22px",
     padding: "20px",
