@@ -1,54 +1,34 @@
 import { Link, useLocation } from "react-router-dom";
 
-function Navbar() {
-  const location = useLocation();
+export default function Navbar() {
+  const { pathname } = useLocation();
+
+  const item = (path) => ({
+    textDecoration: "none",
+    fontSize: "14px",
+    color: pathname === path ? "#000" : "#888",
+    fontWeight: pathname === path ? "600" : "400"
+  });
 
   return (
-    <nav style={styles.nav}>
-      <Link
-        to="/"
-        style={{
-          ...styles.link,
-          fontWeight: location.pathname === "/" ? "600" : "400"
-        }}
-      >
-        Today
-      </Link>
-
-      <Link
-        to="/timeline"
-        style={{
-          ...styles.link,
-          fontWeight: location.pathname === "/timeline" ? "600" : "400"
-        }}
-      >
-        Timeline
-      </Link>
-    </nav>
+    <div style={styles.bar}>
+      <Link to="/" style={item("/")}>Today</Link>
+      <Link to="/timeline" style={item("/timeline")}>Timeline</Link>
+    </div>
   );
 }
 
 const styles = {
-  nav: {
+  bar: {
     position: "fixed",
     bottom: 0,
     left: 0,
     right: 0,
-    height: "64px",
-    background: "rgba(255,255,255,0.9)",
-    backdropFilter: "blur(12px)",
-    borderTop: "1px solid rgba(0,0,0,0.06)",
-    borderRadius: "18px 18px 0 0",
+    height: "60px",
+    background: "#FFF",
     display: "flex",
     justifyContent: "space-around",
     alignItems: "center",
-    fontFamily: "Inter, sans-serif"
-  },
-  link: {
-    textDecoration: "none",
-    color: "#333",
-    fontSize: "16px"
+    borderTop: "1px solid #EEE"
   }
 };
-
-export default Navbar;

@@ -3,11 +3,11 @@ import { auth, db } from "../firebase";
 import { collection, getDocs } from "firebase/firestore";
 
 const moodsMap = {
-  sad: { emoji: "😔", color: "#F4A261" },
+  sad: { emoji: "😿", color: "#F4A261" },
   low: { emoji: "😕", color: "#E9C46A" },
   neutral: { emoji: "😐", color: "#D3D3D3" },
   good: { emoji: "🙂", color: "#A8DADC" },
-  happy: { emoji: "😊", color: "#90DB8A" }
+  happy: { emoji: "😸", color: "#90DB8A" }
 };
 
 function Timeline() {
@@ -165,17 +165,16 @@ const styles = {
     maxWidth: "420px",
     margin: "0 auto"
   },
-
-  cell: {
-    width: "48px",
-    height: "48px",
-    borderRadius: "50%",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    fontSize: "20px"
+    cell: {
+        width: "48px",
+        height: "48px",
+        borderRadius: "50%",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        fontSize: "20px",
+        transition: "transform 0.15s"
   },
-
   overlay: {
     position: "fixed",
     inset: 0,
