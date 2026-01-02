@@ -6,22 +6,45 @@ import {
   Chart as ChartJS,
   ArcElement,
   Tooltip,
-  Legend
+  Legend,
+  LineElement,
+  PointElement,
+  CategoryScale,
+  LinearScale
 } from "chart.js";
-import { Doughnut } from "react-chartjs-2";
 
-ChartJS.register(ArcElement, Tooltip, Legend);
+import { Doughnut, Line } from "react-chartjs-2";
 
-const moodConfig = {
-  sad: { label: "Sad", color: "#F4A261" },
-  low: { label: "Low", color: "#E9C46A" },
-  neutral: { label: "Neutral", color: "#D3D3D3" },
-  good: { label: "Good", color: "#A8DADC" },
-  happy: { label: "Happy", color: "#90DB8A" }
+ChartJS.register(
+  ArcElement,
+  Tooltip,
+  Legend,
+  LineElement,
+  PointElement,
+  CategoryScale,
+  LinearScale
+);
+
+/* 🌸 YOUR EMOTIONS (with score for charts) */
+const moodsMap = {
+  sad: { emoji: "😿", label: "Sad", color: "#FADADD", score: 1 },
+  low: { emoji: "😕", label: "Low", color: "#FBE7C6", score: 2 },
+  okay: { emoji: "😐", label: "Okay", color: "#E5E7EB", score: 3 },
+  good: { emoji: "🙂", label: "Good", color: "#D1FAE5", score: 4 },
+  happy: { emoji: "😊", label: "Happy", color: "#BBF7D0", score: 5 },
+
+  tired: { emoji: "😴", label: "Tired", color: "#E0E7FF", score: 2 },
+  sick: { emoji: "🤒", label: "Sick", color: "#FEE2E2", score: 1 },
+
+  anxious: { emoji: "😰", label: "Anxious", color: "#FFE4E6", score: 2 },
+  calm: { emoji: "🌿", label: "Calm", color: "#ECFDF5", score: 4 },
+
+  crampy: { emoji: "🌸", label: "Crampy", color: "#FCE7F3", score: 2 },
+  low_energy: { emoji: "🌙", label: "Low energy", color: "#EDE9FE", score: 2 }
 };
 
 export default function Charts() {
-  const [counts, setCounts] = useState(null);
+  const [entries, setEntries] = useState([]);
   const user = auth.currentUser;
 
   useEffect(() => {
@@ -32,118 +55,167 @@ export default function Charts() {
         collection(db, "users", user.uid, "entries")
       );
 
-      const moodCounts = {
-        sad: 0,
-        low: 0,
-        neutral: 0,
-        good: 0,
-        happy: 0
-      };
-
+      const arr = [];
       snap.forEach((doc) => {
-        const mood = doc.data().mood;
-        if (moodCounts[mood] !== undefined) {
-          moodCounts[mood]++;
-        }
+        arr.push({ date: doc.id, ...doc.data() });
       });
 
-      setCounts(moodCounts);
+      setEntries(arr);
     };
 
     load();
   }, [user]);
 
-  if (!counts) return null;
+  if (!entries.length) {
+    return (
+      <div style={styles.container}>
+        <p>No data yet 🌱</p>
+      </div>
+    );
+  }
 
-  const data = {
-    labels: Object.keys(moodConfig).map(
-      (m) => moodConfig[m].label
-    ),
+  /* -----------------------------
+     1️⃣ DOUGHNUT – OVERALL MOODS
+  ----------------------------- */
+  const moodCounts = {};
+  Object.keys(moodsMap).forEach((m) => (moodCounts[m] = 0));
+
+  entries.forEach((e) => {
+    if (moodCounts[e.mood] !== undefined) {
+      moodCounts[e.mood]++;
+    }
+  });
+
+  const doughnutData = {
+    labels: Object.keys(moodsMap).map((m) => moodsMap[m].label),
     datasets: [
       {
-        data: Object.keys(moodConfig).map((m) => counts[m]),
-        backgroundColor: Object.keys(moodConfig).map(
-          (m) => moodConfig[m].color
+        data: Object.keys(moodsMap).map((m) => moodCounts[m]),
+        backgroundColor: Object.keys(moodsMap).map(
+          (m) => moodsMap[m].color
         ),
         borderWidth: 0
       }
     ]
   };
 
+  /* -----------------------------
+     2️⃣ LINE – MOOD OVER TIME
+  ----------------------------- */
+  const sorted = [...entries].sort((a, b) =>
+    a.date.localeCompare(b.date)
+  );
+
+  const lineData = {
+    labels: sorted.map((e) => e.date.slice(5)), // MM-DD
+    datasets: [
+      {
+        label: "Mood trend",
+        data: sorted.map(
+          (e) => moodsMap[e.mood]?.score || 0
+        ),
+        borderColor: "#FF9F9F",
+        backgroundColor: "rgba(255,159,159,0.2)",
+        tension: 0.4,
+        fill: true,
+        pointRadius: 4
+      }
+    ]
+  };
+
+  /* -----------------------------
+     3️⃣ MONTHLY COMPARISON
+  ----------------------------- */
+  const now = new Date();
+  const thisMonth = now.toISOString().slice(0, 7);
+  const lastMonth = new Date(
+    now.getFullYear(),
+    now.getMonth() - 1,
+    1
+  )
+    .toISOString()
+    .slice(0, 7);
+
+  const monthAverage = (month) => {
+    const filtered = entries.filter((e) =>
+      e.date.startsWith(month)
+    );
+    if (!filtered.length) return "—";
+
+    const sum = filtered.reduce(
+      (acc, e) => acc + (moodsMap[e.mood]?.score || 0),
+      0
+    );
+    return (sum / filtered.length).toFixed(1);
+  };
+
+  /* -----------------------------
+     4️⃣ YEARLY OVERVIEW
+  ----------------------------- */
+  const year = now.getFullYear();
+  const yearlyCount = entries.filter((e) =>
+    e.date.startsWith(year.toString())
+  ).length;
+
   return (
     <div style={styles.container}>
-      <h1 style={styles.title}>📊 Your Mood Chart</h1>
-      <p style={styles.subtitle}>Track your emotional journey</p>
+      <h1 style={styles.title}>📊 Your Mood Insights</h1>
+      <p style={styles.subtitle}>Patterns, not pressure</p>
 
+      {/* Doughnut */}
       <div style={styles.card}>
-        <Doughnut data={data} />
+        <Doughnut data={doughnutData} />
       </div>
 
-      <div style={styles.legend}>
-        {Object.keys(moodConfig).map((m) => (
-          <div key={m} style={styles.legendRow}>
-            <span
-              style={{
-                ...styles.dot,
-                background: moodConfig[m].color
-              }}
-            />
-            <span>{moodConfig[m].label}</span>
-            <span style={styles.count}>{counts[m]}</span>
-          </div>
-        ))}
+      {/* Line */}
+      <div style={styles.card}>
+        <h3>Mood over time</h3>
+        <p> 1 being worst, 5 being best</p>
+        <Line data={lineData} />
+      </div>
+
+      {/* Monthly */}
+      <div style={styles.card}>
+        <h3>Monthly comparison</h3>
+        <p>This month: <b>{monthAverage(thisMonth)}</b></p>
+        <p>Last month: <b>{monthAverage(lastMonth)}</b></p>
+      </div>
+
+      {/* Yearly */}
+      <div style={styles.card}>
+        <h3>{year} overview</h3>
+        <p>Total entries: <b>{yearlyCount}</b></p>
       </div>
     </div>
   );
 }
 
+/* 🎨 STYLES */
 const styles = {
   container: {
     minHeight: "100vh",
     padding: "24px",
-    paddingBottom: "80px",
+    paddingBottom: "90px",
     background: "linear-gradient(180deg,#F7FBFF,#EAF2F8)",
     fontFamily: "Inter, system-ui",
     display: "flex",
     flexDirection: "column",
-    alignItems: "center"
+    alignItems: "center",
+    gap: "22px"
   },
   title: {
     fontSize: "30px",
-    marginBottom: "6px"
+    marginBottom: "4px"
   },
   subtitle: {
     fontSize: "14px",
-    color: "#666",
-    marginBottom: "20px"
+    color: "#666"
   },
   card: {
-    width: "260px",
+    width: "320px",
     background: "#FFF",
     borderRadius: "22px",
     padding: "20px",
-    boxShadow: "0 10px 25px rgba(0,0,0,.08)"
-  },
-  legend: {
-    marginTop: "20px",
-    width: "260px",
-    display: "flex",
-    flexDirection: "column",
-    gap: "10px"
-  },
-  legendRow: {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "space-between",
-    fontSize: "14px"
-  },
-  dot: {
-    width: "12px",
-    height: "12px",
-    borderRadius: "50%",
-    marginRight: "8px"
-  },
-  count: {
-    fontWeight: "600"
+    boxShadow: "0 10px 25px rgba(0,0,0,0.08)"
   }
 };

@@ -30,7 +30,20 @@ export default function Home() {
   const user = auth.currentUser;
   const firstName = user?.displayName?.split(" ")[0] || "there";
   const todayKey = new Date().toLocaleDateString("en-CA");
+  const gentleMessageForMood = (mood) => {
+    if (!mood) return null;
 
+  const messages = {
+    sick: "Be gentle with yourself today 🫶 Rest is productive too.",
+    crampy: "Your body is asking for softness 🌸 Listen to it.",
+    tired: "You don’t have to do everything today 😴",        low_energy: "Slow days are still valid 🌙",
+    low_energy: "Slow days are still valid 🌙",
+    anxious: "Breathe. You are safe in this moment 🤍",
+    sad: "It’s okay to feel this way. You’re not alone 💛"
+  };
+
+    return messages[mood] || null;
+};
   useEffect(() => {
     if (!user) return;
 
@@ -93,6 +106,9 @@ export default function Home() {
       />
 
       {selectedMood && <p style={styles.saved}>Saved for today ✨</p>}
+        {selectedMood && gentleMessageForMood(selectedMood) && (
+          <p style={styles.gentleBox}>{gentleMessageForMood(selectedMood)}</p>
+        )}
     </div>
   );
 }
@@ -163,5 +179,13 @@ const styles = {
     marginTop: "10px",
     fontSize: "13px",
     color: "#888"
+  },
+  gentleBox: {
+    marginTop: "14px",
+    fontSize: "18px",
+    color: "#555",
+    textAlign: "center",
+    fontFamily: "Helvetica Neue, serif",
+    fontStyle: "italic",
   }
 };
