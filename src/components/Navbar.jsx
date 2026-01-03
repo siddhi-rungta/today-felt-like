@@ -54,7 +54,7 @@ export default function Navbar({ user }) {
 
         {open && (
           <div style={styles.menu}>
-            <div style={styles.menuItem} onClick={() => { setOpen(false); navigate('/'); }}>Profile</div>
+            <div style={styles.menuItem} onClick={() => { setOpen(false); navigate('/profile'); }}>Profile</div>
             <div style={{...styles.menuItem, color: '#c0392b'}} onClick={handleLogout}>Logout</div>
           </div>
         )}
