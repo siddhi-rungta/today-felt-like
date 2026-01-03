@@ -38,7 +38,7 @@ function App() {
         />
       </Routes>
 
-      {user && <Navbar />}
+  {user && <Navbar user={user} />}
     </BrowserRouter>
   );
 }

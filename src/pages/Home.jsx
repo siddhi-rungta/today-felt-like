@@ -36,7 +36,7 @@ export default function Home() {
   const messages = {
     sick: "Be gentle with yourself today 🫶 Rest is productive too.",
     crampy: "Your body is asking for softness 🌸 Listen to it.",
-    tired: "You don’t have to do everything today 😴",        low_energy: "Slow days are still valid 🌙",
+    tired: "You don’t have to do everything today 😴",
     low_energy: "Slow days are still valid 🌙",
     anxious: "Breathe. You are safe in this moment 🤍",
     sad: "It’s okay to feel this way. You’re not alone 💛"
